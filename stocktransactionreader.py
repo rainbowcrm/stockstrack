@@ -5,6 +5,7 @@ from stockclass import Stock
 from stockclass import StockTransaction
 import urllib.request, json
 from datetime import datetime
+import time
 
 time_series_key = 'Time Series (Daily)'
 open_key = '1. open'
@@ -35,11 +36,14 @@ engine = create_engine('mysql://stockuser:delhi@localhost:3306/stocks')
 Session = sessionmaker(bind=engine)
 session = Session()
 url_part1 = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=BSE:"
-url_part2 = "&outputsize=full&apikey=MC90XH32PC655W2S"
+url_part2 = "&outputsize=full&apikey=3N39E9EDEQGEWWBM"    
 
-for stock in session.query(Stock).filter(Stock.security_id == 'HDFC').order_by(Stock.id):
-    stock.print_content()
+#MC90XH32PC655W2S 3N39E9EDEQGEWWBM
+
+for stock in session.query(Stock).filter(and_(Stock.id >= 10, Stock.id < 100 , Stock.groupc == 'A ')).order_by(Stock.id):
+    #stock.print_content()
     url = url_part1 + stock.api_code + url_part2 
+    time.sleep(2)
     response = urllib.request.urlopen(url)
     data = json.loads(response.read())
     if not time_series_key in data.keys():
@@ -51,14 +55,14 @@ for stock in session.query(Stock).filter(Stock.security_id == 'HDFC').order_by(S
 
     daily_data = get_time_series(data)
     keys_list = list(daily_data.keys())
-    for index in range(0,3):
+    for index in range(0,100):
         date_key = keys_list[index]
         print(date_key)
         print(daily_data[date_key])
         stock_transaction = get_stock_transaction(stock.api_code,stock.security_name,stock.id,daily_data[date_key],date_key)
         session.add(stock_transaction)
         session.commit()
-        stock_transaction.print_content()
+        #stock_transaction.print_content()
         
     
     
