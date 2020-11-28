@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from stockclass import Stock
 from stockclass import StockTransaction
 import urllib.request, json
+from datetime import datetime
 
 time_series_key = 'Time Series (Daily)'
 open_key = '1. open'
@@ -13,8 +14,9 @@ close_key = '4. close'
 volume_key = '5. volume'
 
 def get_stock_transaction(api_code, security_name, stock_id , daily_data,date_key):
-    cur_stock_transaction = StockTransaction(api_code,security_name,stock_id,date_key,daily_data[open_key], \
-        daily_data[low_key],daily_data[high_key],daily_data[close_key],daily_data[volume_key])
+    trade_day = datetime.strptime(date_key,"%Y-%m-%d")
+    cur_stock_transaction = StockTransaction(api_code,security_name,stock_id,trade_day,float(daily_data[open_key]), \
+        float(daily_data[low_key]),float(daily_data[high_key]),float(daily_data[close_key]),daily_data[volume_key])
     return cur_stock_transaction
 
 
@@ -32,7 +34,6 @@ def update_api_code(session,cur_stock):
 engine = create_engine('mysql://stockuser:delhi@localhost:3306/stocks')
 Session = sessionmaker(bind=engine)
 session = Session()
-session_new = Session()
 url_part1 = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=BSE:"
 url_part2 = "&outputsize=full&apikey=MC90XH32PC655W2S"
 
@@ -50,14 +51,16 @@ for stock in session.query(Stock).filter(Stock.security_id == 'HDFC').order_by(S
 
     daily_data = get_time_series(data)
     keys_list = list(daily_data.keys())
-    for index in range(0,1):
+    for index in range(0,3):
         date_key = keys_list[index]
+        print(date_key)
         print(daily_data[date_key])
         stock_transaction = get_stock_transaction(stock.api_code,stock.security_name,stock.id,daily_data[date_key],date_key)
+        session.add(stock_transaction)
+        session.commit()
         stock_transaction.print_content()
-        session_new.add(stock_transaction)
         
-    session_new.commit()
+    
     
 
 

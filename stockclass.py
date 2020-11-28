@@ -6,6 +6,43 @@ from sqlalchemy.orm import relationship, backref
 
 Base = declarative_base()
 
+class StockTransaction(Base):
+    __tablename__ = "stock_transaction"
+    id = Column(Integer, primary_key=True)
+    api_code = Column("api_code",String)
+    security_name = Column("security_name",String)
+    stock_id = Column(Integer,ForeignKey("stock_master.id"))
+    trans_date = Column("TRANS_DATE",DateTime)
+    open_price = Column("open_price",Float)
+    low_price = Column("low_price",Float)
+    high_price = Column("high_price",Float)
+    close_price =Column("close_price",Float)
+    volume = Column(Float)
+    stock = relationship("Stock")
+
+
+    def __init__ (self,api_code,security_name,stock_id,trans_date,open_price,low_price,high_price,close_price,volume ):
+        self.api_code=api_code
+        self.security_name=security_name
+        self.stock_id=stock_id
+        self.trans_date=trans_date
+        self.open_price=open_price
+        self.low_price=low_price
+        self.high_price=high_price
+        self.close_price=close_price
+        self.volume=volume
+
+    def print_content(self):
+        print(self.security_name)
+        print(self.api_code)
+        print(self.open_price)
+        print(self.close_price)
+        print(self.low_price)
+        print(self.high_price)
+        print(self.stock_id)
+        print(self.volume)
+        print(self.trans_date)
+
 class Stock(Base):
     __tablename__ = "stock_master"
     id = Column(Integer, primary_key=True)
@@ -53,38 +90,6 @@ class Stock(Base):
 
     
 
-
-class StockTransaction(Base):
-    __tablename__ = "stock_transaction"
-    id = Column(Integer, primary_key=True)
-    api_code = Column(String),
-    security_name = Column(String),
-    stock_id = Column(Integer,ForeignKey("stock_master.id"))
-    trans_date = Column(DateTime),
-    open_price = Column(Float),
-    low_price =Column(Float),
-    high_price = Column(Float),
-    close_price =Column(Float),
-    volume = Column(Float)
-    #stock = relationship("Stock")
-
-    def __init__ (self,api_code,security_name,stock_id,trans_date,open_price,low_price,high_price,close_price,volume ):
-        self.api_code=api_code
-        self.security_name=security_name
-        self.stock_id=stock_id
-        self.trans_date=trans_date
-        self.open_price=open_price
-        self.low_price=low_price
-        self.high_price=high_price
-        self.close_price=close_price
-        self.volume=volume
-
-    def print_content(self):
-        print(self.security_name)
-        print(self.api_code)
-        print(self.open_price)
-        print(self.close_price)
-        print(self.stock_id)
 
 
         
