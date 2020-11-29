@@ -44,7 +44,7 @@ url_part2 = "&outputsize=full&apikey=3N39E9EDEQGEWWBM"
 
 #MC90XH32PC655W2S 3N39E9EDEQGEWWBM
 
-for stock in session.query(Stock).filter(and_(Stock.id >= 4000, Stock.id < 4400 , Stock.groupc == 'A ')).order_by(Stock.id):
+for stock in session.query(Stock).filter(and_(Stock.id >= 400, Stock.id < 700 , Stock.groupc == 'B ')).order_by(Stock.id):
     #stock.print_content()
     url = url_part1 + stock.api_code + url_part2
     print(stock.security_name) 
