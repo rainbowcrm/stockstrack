@@ -30,6 +30,10 @@ def update_api_code(session,cur_stock):
     session.commit()
     print("updating api code to " + cur_stock.security_id )
 
+def update_group_code(session,cur_stock):
+    cur_stock.groupc = 'UNID'
+    session.commit()
+    print("updating Group C to UNID for " + cur_stock.security_id )
 
 
 engine = create_engine('mysql://stockuser:delhi@localhost:3306/stocks')
@@ -40,18 +44,24 @@ url_part2 = "&outputsize=full&apikey=3N39E9EDEQGEWWBM"
 
 #MC90XH32PC655W2S 3N39E9EDEQGEWWBM
 
-for stock in session.query(Stock).filter(and_(Stock.id >= 10, Stock.id < 100 , Stock.groupc == 'A ')).order_by(Stock.id):
+for stock in session.query(Stock).filter(and_(Stock.id >= 4000, Stock.id < 4400 , Stock.groupc == 'A ')).order_by(Stock.id):
     #stock.print_content()
-    url = url_part1 + stock.api_code + url_part2 
+    url = url_part1 + stock.api_code + url_part2
+    print(stock.security_name) 
     time.sleep(2)
     response = urllib.request.urlopen(url)
     data = json.loads(response.read())
     if not time_series_key in data.keys():
-        url = url_part1 + stock.security_id + url_part2 
+        url = url_part1 + stock.security_id + url_part2
+        print('searching on security id')
+        time.sleep(2) 
         response = urllib.request.urlopen(url)
         data = json.loads(response.read())
-        update_api_code(session,stock)
-   
+        if  time_series_key in data.keys():
+            update_api_code(session,stock)
+        else:
+            update_group_code(session,stock)
+            continue
 
     daily_data = get_time_series(data)
     keys_list = list(daily_data.keys())
