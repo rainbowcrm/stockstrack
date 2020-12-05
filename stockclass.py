@@ -56,6 +56,7 @@ class Stock(Base):
     isin_no=Column(String)
     industry=Column(String)
     api_code=Column(String)
+    is_tracked = Column(Boolean)
 
     def __init__(self,list_of_values):
         self.security_code=list_of_values[0]
@@ -68,6 +69,7 @@ class Stock(Base):
         self.isin_no=list_of_values[7]
         self.industry=list_of_values[8]
         self.api_code=self.security_id
+        self.is_tracked = True
 
    
 
@@ -87,6 +89,7 @@ class Stock(Base):
         self.isin_no=list_of_values[7]
         self.industry=list_of_values[8]
         self.api_code=self.security_id
+        self.is_tracked =True 
 
     
 
