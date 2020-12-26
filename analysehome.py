@@ -47,7 +47,7 @@ for stock in session.query(Stock).filter(Stock.is_tracked == True ).order_by(Sto
         all_records.append(ind_record)
 
 df = pd.DataFrame(all_records,columns=['Id','Stock','Industry','Start','End','Percent','Min','Max','Avg','Var'])
-sorted_rows = df.sort_values(by=['Percent'],ascending=false)
+sorted_rows = df.sort_values(by=['Percent'],ascending=False)
 sorted_rows.to_csv('f3.csv',index=False)
 #for currow in sorted_rows.iterrows():
     #print (currow)
