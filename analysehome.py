@@ -13,7 +13,7 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 from_day = input("Please enter begin date  in YYYY-mm-dd format (2020-07-15)")
-end_day = input("Please enter end date  in YYYY-mm-dd format")
+end_day = input("Please enter end date  in YYYY-mm-dd format (2020-07-15)")
 
 start_trade_day = datetime.strptime(from_day,"%Y-%m-%d")
 end_trade_day = datetime.strptime(end_day,"%Y-%m-%d")
@@ -42,13 +42,13 @@ for stock in session.query(Stock).filter(Stock.is_tracked == True ).order_by(Sto
     if ( not (min_price  is None) and  not (max_price  is None)):
         percent_variation = ((max_price - min_price) / min_price) * 100
     #print("Stock = " +  stock.security_name  + ":start=" + str(start_price) + ": end=" + str(end_price) + ":incr=" + str(percent_increase))
-    ind_record =[stock.security_name,stock.industry,start_price,end_price,percent_increase,min_price,max_price,avg_price,percent_variation]
+    ind_record =[stock.id,stock.security_name,stock.industry,start_price,end_price,percent_increase,min_price,max_price,avg_price,percent_variation]
     if (start_price != 1 and end_price != 1):
         all_records.append(ind_record)
 
-df = pd.DataFrame(all_records,columns=['Stock','Industry','Start','End','Percent','Min','Max','Avg','Var'])
-sorted_rows = df.sort_values(by=['Percent'])
-sorted_rows.to_csv('f2.csv',index=False)
+df = pd.DataFrame(all_records,columns=['Id','Stock','Industry','Start','End','Percent','Min','Max','Avg','Var'])
+sorted_rows = df.sort_values(by=['Percent'],ascending=false)
+sorted_rows.to_csv('f3.csv',index=False)
 #for currow in sorted_rows.iterrows():
     #print (currow)
     #print(currow['Stock'] + ' ' + currow['Industry'] + ' ' + currow['Start'] + ' ' + currow['End'] + ' ' +  currow['Percent']  )

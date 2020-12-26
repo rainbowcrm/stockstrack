@@ -43,7 +43,7 @@ url_part2 = "&outputsize=120&apikey=3N39E9EDEQGEWWBM"
 #MC90XH32PC655W2S 3N39E9EDEQGEWWBM
 # select * from  stock_master where groupc ='A ' or groupc = 'B ' and id < 700 -- upto Nov 27 
 
-for stock in session.query(Stock).filter(and_(Stock.groupc == 'X ' ,Stock.id < 2000,Stock.id >= 1812 )).order_by(Stock.id):
+for stock in session.query(Stock).filter(and_(Stock.groupc == 'X ' ,Stock.id < 2000,Stock.id >= 1607 , Stock.is_tracked ==1 )).order_by(Stock.id):
     #stock.print_content()
     url = url_part1 + stock.api_code + url_part2
     print(stock.security_name) 
@@ -56,7 +56,7 @@ for stock in session.query(Stock).filter(and_(Stock.groupc == 'X ' ,Stock.id < 2
     daily_data = get_time_series(data)
     if (daily_data == ''):
         continue
-    keys_list = ["2020-12-07","2020-12-08","2020-12-09","2020-12-10","2020-12-11","2020-12-14","2020-12-15","2020-12-16","2020-12-17","2020-12-18"]
+    keys_list = ["2020-12-21","2020-12-22","2020-12-23","2020-12-24"]
     for index in range(0,len(keys_list)):
         date_key = keys_list[index]
         print(date_key)
@@ -65,7 +65,7 @@ for stock in session.query(Stock).filter(and_(Stock.groupc == 'X ' ,Stock.id < 2
             stock_transaction = get_stock_transaction(stock.api_code,stock.security_name,stock.id,daily_data[date_key],date_key)
             session.add(stock_transaction)
             session.commit()
-            update_tracked(session,stock)
+            #update_tracked(session,stock)
         #stock_transaction.print_content()
         
     
